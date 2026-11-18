@@ -444,25 +444,25 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 **Objetivo:** leer/escribir `datos.json` de forma segura y exponer repositories por entidad.
 
 **`JsonFileStore` (E/S del archivo)**
-- [ ] `@Component` con `@Value("${app.datos.ruta}")`, `ObjectMapper` inyectado, y `ReentrantReadWriteLock`.
-- [ ] Al iniciar (`@PostConstruct`): si el archivo **no existe**, crear directorios y escribir la estructura vacía válida; si existe, validar que se pueda leer (si no, lanzar `PersistenciaException` **sin tocar el archivo**).
-- [ ] Método `<T> T leer(Function<DatosRestaurante, T> consulta)` (bajo lock de lectura; lee del disco en cada llamada).
-- [ ] Método `<T> T modificar(Function<DatosRestaurante, T> cambio)` (bajo lock de escritura: leer → aplicar → guardar).
-- [ ] Escritura **atómica**: escribir a `datos.json.tmp` en el mismo directorio y luego `Files.move(tmp, destino, REPLACE_EXISTING)` (intentar `ATOMIC_MOVE` con fallback). Opcional: copiar a `.bak` antes de sobrescribir.
-- [ ] Capturar `IOException`/`JsonProcessingException` y lanzar `PersistenciaException` con mensaje genérico (el detalle va a `log.error`, no a la respuesta).
+- [x] `@Component` con `@Value("${app.datos.ruta}")`, `ObjectMapper` inyectado, y `ReentrantReadWriteLock`.
+- [x] Al iniciar (`@PostConstruct`): si el archivo **no existe**, crear directorios y escribir la estructura vacía válida; si existe, validar que se pueda leer (si no, lanzar `PersistenciaException` **sin tocar el archivo**).
+- [x] Método `<T> T leer(Function<DatosRestaurante, T> consulta)` (bajo lock de lectura; lee del disco en cada llamada).
+- [x] Método `<T> T modificar(Function<DatosRestaurante, T> cambio)` (bajo lock de escritura: leer → aplicar → guardar).
+- [x] Escritura **atómica**: escribir a `datos.json.tmp` en el mismo directorio y luego `Files.move(tmp, destino, REPLACE_EXISTING)` (intentar `ATOMIC_MOVE` con fallback). Opcional: copiar a `.bak` antes de sobrescribir.
+- [x] Capturar `IOException`/`JsonProcessingException` y lanzar `PersistenciaException` con mensaje genérico (el detalle va a `log.error`, no a la respuesta).
 
 **Repositories**
-- [ ] `ClienteRepository`: `findAll()`, `findById(Long)`, `findByIdentificacion(String)`, `save(Cliente)` (si `id == null` asigna `max+1`; si existe, reemplaza), `deleteById(Long)`, `existsById(Long)`.
-- [ ] `MesaRepository`: lo mismo + `findByNumero(Integer)`.
-- [ ] `ReservaRepository`: `findAll()`, `findById`, `save`, `findByMesaIdAndFecha(Long, LocalDate)`, `existsByClienteId`, `existsByMesaId`. (No hay borrado de reservas: se cancelan.)
-- [ ] Todos con `@Repository` y Javadoc que indique que solo hablan con `JsonFileStore`.
+- [x] `ClienteRepository`: `findAll()`, `findById(Long)`, `findByIdentificacion(String)`, `save(Cliente)` (si `id == null` asigna `max+1`; si existe, reemplaza), `deleteById(Long)`, `existsById(Long)`.
+- [x] `MesaRepository`: lo mismo + `findByNumero(Integer)`.
+- [x] `ReservaRepository`: `findAll()`, `findById`, `save`, `findByMesaIdAndFecha(Long, LocalDate)`, `existsByClienteId`, `existsByMesaId`. (No hay borrado de reservas: se cancelan.)
+- [x] Todos con `@Repository` y Javadoc que indique que solo hablan con `JsonFileStore`.
 
 **Tests (con `@TempDir`, sin Spring cuando sea posible)**
-- [ ] Archivo inexistente → se crea con estructura válida.
-- [ ] Guardar con una instancia y leer con **otra nueva** (simula reinicio) → datos intactos.
-- [ ] IDs autoincrementales por colección.
-- [ ] JSON corrupto → `PersistenciaException` y el contenido original **no cambia**.
-- [ ] Tras guardar no queda archivo `.tmp` huérfano.
+- [x] Archivo inexistente → se crea con estructura válida.
+- [x] Guardar con una instancia y leer con **otra nueva** (simula reinicio) → datos intactos.
+- [x] IDs autoincrementales por colección.
+- [x] JSON corrupto → `PersistenciaException` y el contenido original **no cambia**.
+- [x] Tras guardar no queda archivo `.tmp` huérfano.
 
 **Criterios de aceptación**
 - Todos los tests de persistencia en verde.
@@ -665,7 +665,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 |------|-------------|--------|
 | 1 | Bootstrap del proyecto | ✅ Completada |
 | 2 | Modelo de datos y DTOs | ✅ Completada |
-| 3 | Persistencia JSON + Repositories | ⬜ Pendiente |
+| 3 | Persistencia JSON + Repositories | ✅ Completada |
 | 4 | Excepciones y manejo global de errores | ⬜ Pendiente |
 | 5 | Services: Clientes y Mesas | ⬜ Pendiente |
 | 6 | Service de Reservas y disponibilidad | ⬜ Pendiente |
