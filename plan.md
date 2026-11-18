@@ -476,8 +476,8 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** respuestas de error coherentes (400/404/409/500) sin trazas.
 
-- [ ] `RecursoNoEncontradoException` (404), `SolicitudInvalidaException` (400), `ConflictoException` (409), `PersistenciaException` (500). Todas `RuntimeException`, con Javadoc.
-- [ ] `GlobalExceptionHandler` con `@RestControllerAdvice` que devuelva `ResponseEntity<ErrorResponse>`:
+- [x] `RecursoNoEncontradoException` (404), `SolicitudInvalidaException` (400), `ConflictoException` (409), `PersistenciaException` (500). Todas `RuntimeException`, con Javadoc.
+- [x] `GlobalExceptionHandler` con `@RestControllerAdvice` que devuelva `ResponseEntity<ErrorResponse>`:
   - `RecursoNoEncontradoException` → 404
   - `SolicitudInvalidaException` → 400
   - `ConflictoException` → 409
@@ -486,7 +486,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
   - `MethodArgumentTypeMismatchException` (ej. `/api/clientes/abc`) → 400
   - `MissingServletRequestParameterException` → 400
   - `PersistenciaException` y `Exception` genérica → 500 con mensaje genérico ("Error interno del servidor"); el detalle solo se loguea.
-- [ ] Test del handler (con un controller de prueba o `@WebMvcTest`) verificando status y que **el cuerpo no contenga** `Exception`, `at com.`, ni rutas de clases.
+- [x] Test del handler (con un controller de prueba o `@WebMvcTest`) verificando status y que **el cuerpo no contenga** `Exception`, `at com.`, ni rutas de clases.
 
 **Criterios de aceptación**
 - Cada tipo de error produce el status y el formato `ErrorResponse` de la sección 6.
@@ -666,7 +666,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 1 | Bootstrap del proyecto | ✅ Completada |
 | 2 | Modelo de datos y DTOs | ✅ Completada |
 | 3 | Persistencia JSON + Repositories | ✅ Completada |
-| 4 | Excepciones y manejo global de errores | ⬜ Pendiente |
+| 4 | Excepciones y manejo global de errores | ✅ Completada |
 | 5 | Services: Clientes y Mesas | ⬜ Pendiente |
 | 6 | Service de Reservas y disponibilidad | ⬜ Pendiente |
 | 7 | Controllers REST | ⬜ Pendiente |
