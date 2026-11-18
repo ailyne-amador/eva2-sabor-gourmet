@@ -424,12 +424,12 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** clases del dominio y de entrada/salida, con Jackson funcionando para fechas.
 
-- [ ] `EstadoReserva` (enum `ACTIVA`, `CANCELADA`).
-- [ ] `Cliente`, `Mesa`, `Reserva` con Lombok (`@Data @Builder @NoArgsConstructor @AllArgsConstructor`) y Javadoc por campo.
-- [ ] `DatosRestaurante` con las tres listas inicializadas a `new ArrayList<>()` (usar `@Builder.Default`).
-- [ ] DTOs `ClienteRequest`, `MesaRequest`, `ReservaRequest` con las anotaciones de validación de la sección 7 y mensajes en español.
-- [ ] `ErrorResponse` (`timestamp`, `status`, `error`, `mensaje`, `ruta`, `detalles`).
-- [ ] Test de serialización: `DatosRestaurante` → JSON → `DatosRestaurante` conserva `LocalDate`/`LocalTime` como `"2026-12-05"` / `"20:00"` (no timestamps numéricos).
+- [x] `EstadoReserva` (enum `ACTIVA`, `CANCELADA`).
+- [x] `Cliente`, `Mesa`, `Reserva` con Lombok (`@Data @Builder @NoArgsConstructor @AllArgsConstructor`) y Javadoc por campo.
+- [x] `DatosRestaurante` con las tres listas inicializadas a `new ArrayList<>()` (usar `@Builder.Default`).
+- [x] DTOs `ClienteRequest`, `MesaRequest`, `ReservaRequest` con las anotaciones de validación de la sección 7 y mensajes en español.
+- [x] `ErrorResponse` (`timestamp`, `status`, `error`, `mensaje`, `ruta`, `detalles`).
+- [x] Test de serialización: `DatosRestaurante` → JSON → `DatosRestaurante` conserva `LocalDate`/`LocalTime` como `"2026-12-05"` / `"20:00"` (no timestamps numéricos).
 
 **Criterios de aceptación**
 - Ida y vuelta JSON sin pérdida de datos.
@@ -664,7 +664,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | Fase | Descripción | Estado |
 |------|-------------|--------|
 | 1 | Bootstrap del proyecto | ✅ Completada |
-| 2 | Modelo de datos y DTOs | ⬜ Pendiente |
+| 2 | Modelo de datos y DTOs | ✅ Completada |
 | 3 | Persistencia JSON + Repositories | ⬜ Pendiente |
 | 4 | Excepciones y manejo global de errores | ⬜ Pendiente |
 | 5 | Services: Clientes y Mesas | ⬜ Pendiente |
