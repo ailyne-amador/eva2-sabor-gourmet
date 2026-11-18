@@ -499,10 +499,10 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** reglas de negocio de clientes y mesas.
 
-- [ ] `ClienteService` (`@Service`, `@RequiredArgsConstructor`): `listar()`, `obtener(id)`, `crear(request)`, `actualizar(id, request)`, `eliminar(id)`. Reglas 5 y 6 de la sección 7.
-- [ ] `MesaService`: mismo CRUD + reglas 5, 6 y 7. Incluir (stub o implementado ya) `disponibles(fecha, hora, personas)` — se completa en la Fase 6.
-- [ ] Mapeo `Request → modelo` dentro del Service (método privado o clase `Mapper` simple; sin librerías externas).
-- [ ] Tests unitarios con Mockito (`@ExtendWith(MockitoExtension.class)`):
+- [x] `ClienteService` (`@Service`, `@RequiredArgsConstructor`): `listar()`, `obtener(id)`, `crear(request)`, `actualizar(id, request)`, `eliminar(id)`. Reglas 5 y 6 de la sección 7.
+- [x] `MesaService`: mismo CRUD + reglas 5, 6 y 7. Incluir (stub o implementado ya) `disponibles(fecha, hora, personas)` — se completa en la Fase 6.
+- [x] Mapeo `Request → modelo` dentro del Service (método privado o clase `Mapper` simple; sin librerías externas).
+- [x] Tests unitarios con Mockito (`@ExtendWith(MockitoExtension.class)`):
   - crear OK; crear con identificación/número duplicado → `ConflictoException`
   - obtener/actualizar/eliminar inexistente → `RecursoNoEncontradoException`
   - eliminar con reservas asociadas → `ConflictoException`
@@ -667,7 +667,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 2 | Modelo de datos y DTOs | ✅ Completada |
 | 3 | Persistencia JSON + Repositories | ✅ Completada |
 | 4 | Excepciones y manejo global de errores | ✅ Completada |
-| 5 | Services: Clientes y Mesas | ⬜ Pendiente |
+| 5 | Services: Clientes y Mesas | ✅ Completada |
 | 6 | Service de Reservas y disponibilidad | ⬜ Pendiente |
 | 7 | Controllers REST | ⬜ Pendiente |
 | 8 | Pruebas de integración | ⬜ Pendiente |
