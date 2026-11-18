@@ -43,7 +43,6 @@ class JsonFileStoreTest {
         almacenamiento.inicializar();
         Cliente cliente = Cliente.builder()
                 .nombre("Camila Rojas")
-                .identificacion("12.345.678-5")
                 .email("camila@example.com")
                 .telefono("+56912345678")
                 .build();

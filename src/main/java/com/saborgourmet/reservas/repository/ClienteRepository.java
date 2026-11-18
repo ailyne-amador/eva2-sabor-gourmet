@@ -38,17 +38,6 @@ public class ClienteRepository {
                 .findFirst());
     }
 
-    /**
-     * Busca un cliente por su identificación documental.
-     *
-     * @param identificacion RUT o documento del cliente
-     * @return cliente encontrado o {@link Optional#empty()} si no existe
-     */
-    public Optional<Cliente> findByIdentificacion(String identificacion) {
-        return almacenamiento.leer(datos -> datos.getClientes().stream()
-                .filter(cliente -> Objects.equals(cliente.getIdentificacion(), identificacion))
-                .findFirst());
-    }
 
     /**
      * Inserta el cliente asignándole el siguiente ID o reemplaza el registro con el mismo ID.

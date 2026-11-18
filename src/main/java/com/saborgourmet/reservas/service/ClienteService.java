@@ -7,7 +7,6 @@ import com.saborgourmet.reservas.model.Cliente;
 import com.saborgourmet.reservas.repository.ClienteRepository;
 import com.saborgourmet.reservas.repository.ReservaRepository;
 import java.util.List;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -43,30 +42,25 @@ public class ClienteService {
     }
 
     /**
-     * Crea un cliente si su identificación aún no está registrada.
+     * Crea un cliente con los datos validados de la solicitud.
      *
      * @param solicitud campos validados del cliente
      * @return cliente guardado con ID asignado
-     * @throws ConflictoException si otra ficha ya usa la identificación
      */
     public Cliente crear(ClienteRequest solicitud) {
-        validarIdentificacionDisponible(solicitud.identificacion(), null);
         return clienteRepository.save(mapear(null, solicitud));
     }
 
     /**
-     * Actualiza todos los datos del cliente, conservando su ID y permitiendo
-     * mantener su propia identificación.
+     * Actualiza los datos del cliente indicado, conservando su ID.
      *
      * @param id identificador del cliente que se actualizará
      * @param solicitud nuevos campos validados
      * @return cliente actualizado
      * @throws RecursoNoEncontradoException si no existe un cliente con ese ID
-     * @throws ConflictoException si otro cliente ya usa la identificación solicitada
      */
     public Cliente actualizar(Long id, ClienteRequest solicitud) {
         buscarObligatorio(id);
-        validarIdentificacionDisponible(solicitud.identificacion(), id);
         return clienteRepository.save(mapear(id, solicitud));
     }
 
@@ -90,20 +84,11 @@ public class ClienteService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("No existe un cliente con ID " + id));
     }
 
-    private void validarIdentificacionDisponible(String identificacion, Long idActual) {
-        boolean duplicada = clienteRepository.findByIdentificacion(identificacion)
-                .filter(cliente -> idActual == null || !Objects.equals(cliente.getId(), idActual))
-                .isPresent();
-        if (duplicada) {
-            throw new ConflictoException("La identificación " + identificacion + " ya está registrada");
-        }
-    }
 
     private Cliente mapear(Long id, ClienteRequest solicitud) {
         return Cliente.builder()
                 .id(id)
                 .nombre(solicitud.nombre())
-                .identificacion(solicitud.identificacion())
                 .email(solicitud.email())
                 .telefono(solicitud.telefono())
                 .build();

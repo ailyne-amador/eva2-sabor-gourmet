@@ -169,7 +169,7 @@ logging.level.com.saborgourmet=INFO
 | Cliente/mesa referenciado inexistente (en el body de una reserva) | **404**. |
 | Eliminar cliente o mesa con reservas asociadas (de cualquier estado) | **409** (se respeta la integridad referencial). |
 | Reducir capacidad de mesa por debajo de la de una reserva `ACTIVA` futura | **409**. |
-| Duplicados | `identificacion` de cliente única y `numero` de mesa único → **409**. |
+| Duplicados | El ID identifica a cada cliente; el `numero` de mesa es único → **409**. |
 | Lectura/escritura | Cada operación **lee el JSON del disco**, aplica el cambio y **guarda** (bajo `ReentrantReadWriteLock`). Escritura **atómica**: archivo temporal + `Files.move`. |
 | Concurrencia | Aplicación de una sola instancia; los métodos que crean/modifican reservas son `synchronized` en el Service. Documentar la limitación. |
 | Archivo corrupto | Si el JSON existe pero no se puede leer → `PersistenciaException` (500 genérico) y **no se sobrescribe** el archivo. |
@@ -250,7 +250,7 @@ sabor-gourmet-reservas/
 
 | Clase | Campos |
 |-------|--------|
-| `Cliente` | `Long id`, `String nombre`, `String identificacion` (RUT/documento), `String email`, `String telefono` |
+| `Cliente` | `Long id`, `String nombre`, `String email`, `String telefono` |
 | `Mesa` | `Long id`, `Integer numero`, `Integer capacidad`, `String ubicacion` (opcional) |
 | `Reserva` | `Long id`, `Long clienteId`, `Long mesaId`, `LocalDate fecha`, `LocalTime hora`, `Integer duracionMinutos`, `Integer cantidadPersonas`, `EstadoReserva estado` |
 | `EstadoReserva` | enum `ACTIVA`, `CANCELADA` |
@@ -266,7 +266,6 @@ Las referencias entre registros son **solo por ID** (`clienteId`, `mesaId`), no 
     {
       "id": 1,
       "nombre": "Camila Rojas",
-      "identificacion": "12.345.678-5",
       "email": "camila.rojas@example.com",
       "telefono": "+56912345678"
     }
@@ -326,7 +325,7 @@ Estructura mínima válida cuando el archivo no existe: `{"clientes":[],"mesas":
 |--------|--------|
 | 400 | Campos obligatorios faltantes/vacíos, cantidades ≤ 0, formato inválido (fecha/hora/JSON/tipo), fecha pasada, fuera de horario, capacidad excedida, parámetros de consulta faltantes. |
 | 404 | Cliente, mesa o reserva inexistente (en la ruta o referenciada en el body). |
-| 409 | Reserva superpuesta, identificación/número duplicado, eliminar recurso con reservas asociadas, cancelar una reserva ya cancelada, modificar una reserva cancelada. |
+| 409 | Reserva superpuesta, número de mesa duplicado, eliminar recurso con reservas asociadas, cancelar una reserva ya cancelada, modificar una reserva cancelada. |
 | 500 | Error de persistencia / no controlado → mensaje genérico, **sin traza**. |
 
 ### Formato de error (`ErrorResponse`)
@@ -380,7 +379,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Validación de entrada (Bean Validation en DTOs, activada con `@Valid` en el Controller):**
 
-- `ClienteRequest`: `@NotBlank nombre`, `@NotBlank identificacion`, `@NotBlank @Email email`, `@NotBlank telefono`.
+- `ClienteRequest`: `@NotBlank nombre`, `@NotBlank @Email email`, `@NotBlank telefono`.
 - `MesaRequest`: `@NotNull @Positive numero`, `@NotNull @Positive capacidad`, `ubicacion` opcional.
 - `ReservaRequest`: `@NotNull @Positive clienteId`, `@NotNull @Positive mesaId`, `@NotNull fecha`, `@NotNull hora`, `@NotNull @Positive cantidadPersonas`.
 
@@ -391,7 +390,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 3. Cancelar — existe (404) → si ya está `CANCELADA` → 409 → `estado = CANCELADA` → guardar. Desde ese momento la mesa queda disponible en ese horario.
 4. Disponibilidad — mesas con `capacidad ≥ personas` y sin reserva `ACTIVA` superpuesta en `[hora, hora + duración)`; valida horario y parámetros.
 5. Eliminar cliente/mesa — 404 si no existe; 409 si tiene reservas asociadas.
-6. Crear/actualizar cliente o mesa — 409 si `identificacion`/`numero` ya existe en **otro** registro.
+6. Crear/actualizar mesa — 409 si `numero` ya existe en **otra** mesa.
 7. Actualizar mesa — 409 si la nueva capacidad es menor que `cantidadPersonas` de alguna reserva `ACTIVA` de esa mesa.
 
 ---
@@ -452,7 +451,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 - [x] Capturar `IOException`/`JsonProcessingException` y lanzar `PersistenciaException` con mensaje genérico (el detalle va a `log.error`, no a la respuesta).
 
 **Repositories**
-- [x] `ClienteRepository`: `findAll()`, `findById(Long)`, `findByIdentificacion(String)`, `save(Cliente)` (si `id == null` asigna `max+1`; si existe, reemplaza), `deleteById(Long)`, `existsById(Long)`.
+- [x] `ClienteRepository`: `findAll()`, `findById(Long)`, `save(Cliente)` (si `id == null` asigna `max+1`; si existe, reemplaza), `deleteById(Long)`, `existsById(Long)`.
 - [x] `MesaRepository`: lo mismo + `findByNumero(Integer)`.
 - [x] `ReservaRepository`: `findAll()`, `findById`, `save`, `findByMesaIdAndFecha(Long, LocalDate)`, `existsByClienteId`, `existsByMesaId`. (No hay borrado de reservas: se cancelan.)
 - [x] Todos con `@Repository` y Javadoc que indique que solo hablan con `JsonFileStore`.
@@ -503,10 +502,10 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 - [x] `MesaService`: mismo CRUD + reglas 5, 6 y 7. Incluir (stub o implementado ya) `disponibles(fecha, hora, personas)` — se completa en la Fase 6.
 - [x] Mapeo `Request → modelo` dentro del Service (método privado o clase `Mapper` simple; sin librerías externas).
 - [x] Tests unitarios con Mockito (`@ExtendWith(MockitoExtension.class)`):
-  - crear OK; crear con identificación/número duplicado → `ConflictoException`
+  - crear cliente OK; crear mesa con número duplicado → `ConflictoException`
   - obtener/actualizar/eliminar inexistente → `RecursoNoEncontradoException`
   - eliminar con reservas asociadas → `ConflictoException`
-  - actualizar manteniendo su propio número/identificación → OK (no se considera duplicado)
+  - actualizar manteniendo su propio número de mesa → OK (no se considera duplicado)
   - reducir capacidad bajo reserva activa → `ConflictoException`
 
 **Criterios de aceptación**

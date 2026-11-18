@@ -40,25 +40,17 @@ class ClienteServiceTest {
     }
 
     @Test
-    void crearGuardaClienteConIdentificacionUnica() {
-        Cliente guardado = cliente(1L, "12-3");
-        when(clienteRepository.findByIdentificacion("12-3")).thenReturn(Optional.empty());
+    void crearGuardaCliente() {
+        Cliente guardado = cliente(1L);
         when(clienteRepository.save(any(Cliente.class))).thenReturn(guardado);
 
-        Cliente resultado = servicio.crear(solicitud("12-3"));
+        Cliente resultado = servicio.crear(solicitud("Ana Rojas"));
 
         assertSame(guardado, resultado);
         verify(clienteRepository).save(argThat(cliente -> cliente.getId() == null
-                && cliente.getIdentificacion().equals("12-3")
-                && cliente.getNombre().equals("Ana Rojas")));
-    }
-
-    @Test
-    void crearConIdentificacionDuplicadaFalla() {
-        when(clienteRepository.findByIdentificacion("12-3")).thenReturn(Optional.of(cliente(1L, "12-3")));
-
-        assertThrows(ConflictoException.class, () -> servicio.crear(solicitud("12-3")));
-        verify(clienteRepository, never()).save(any(Cliente.class));
+                && cliente.getNombre().equals("Ana Rojas")
+                && cliente.getEmail().equals("ana@example.com")
+                && cliente.getTelefono().equals("+56912345678")));
     }
 
     @Test
@@ -66,13 +58,13 @@ class ClienteServiceTest {
         when(clienteRepository.findById(9L)).thenReturn(Optional.empty());
 
         assertThrows(RecursoNoEncontradoException.class, () -> servicio.obtener(9L));
-        assertThrows(RecursoNoEncontradoException.class, () -> servicio.actualizar(9L, solicitud("12-3")));
+        assertThrows(RecursoNoEncontradoException.class, () -> servicio.actualizar(9L, solicitud("Ana Rojas")));
         assertThrows(RecursoNoEncontradoException.class, () -> servicio.eliminar(9L));
     }
 
     @Test
     void eliminarClienteConReservasFallaSinBorrar() {
-        when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente(1L, "12-3")));
+        when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente(1L)));
         when(reservaRepository.existsByClienteId(1L)).thenReturn(true);
 
         assertThrows(ConflictoException.class, () -> servicio.eliminar(1L));
@@ -80,39 +72,26 @@ class ClienteServiceTest {
     }
 
     @Test
-    void actualizarConservandoSuIdentificacionEsValido() {
-        Cliente existente = cliente(1L, "12-3");
+    void actualizarConservaIdYActualizaDatos() {
+        Cliente existente = cliente(1L);
         when(clienteRepository.findById(1L)).thenReturn(Optional.of(existente));
-        when(clienteRepository.findByIdentificacion("12-3")).thenReturn(Optional.of(existente));
         when(clienteRepository.save(any(Cliente.class))).thenAnswer(invocacion -> invocacion.getArgument(0));
 
-        Cliente resultado = servicio.actualizar(1L, new ClienteRequest(
-                "Ana Rojas actualizada", "12-3", "ana@example.com", "+56912345678"));
+        Cliente resultado = servicio.actualizar(1L, solicitud("Ana Rojas actualizada"));
 
-        assertEquals(1L, resultado.getId());
+        assertEquals(Long.valueOf(1L), resultado.getId());
         assertEquals("Ana Rojas actualizada", resultado.getNombre());
         verify(clienteRepository).save(argThat(cliente -> cliente.getId().equals(1L)));
     }
 
-    @Test
-    void actualizarConIdentificacionDeOtroClienteFalla() {
-        Cliente existente = cliente(1L, "12-3");
-        when(clienteRepository.findById(1L)).thenReturn(Optional.of(existente));
-        when(clienteRepository.findByIdentificacion("45-6")).thenReturn(Optional.of(cliente(2L, "45-6")));
-
-        assertThrows(ConflictoException.class, () -> servicio.actualizar(1L, solicitud("45-6")));
-        verify(clienteRepository, never()).save(any(Cliente.class));
+    private ClienteRequest solicitud(String nombre) {
+        return new ClienteRequest(nombre, "ana@example.com", "+56912345678");
     }
 
-    private ClienteRequest solicitud(String identificacion) {
-        return new ClienteRequest("Ana Rojas", identificacion, "ana@example.com", "+56912345678");
-    }
-
-    private Cliente cliente(Long id, String identificacion) {
+    private Cliente cliente(Long id) {
         return Cliente.builder()
                 .id(id)
                 .nombre("Ana Rojas")
-                .identificacion(identificacion)
                 .email("ana@example.com")
                 .telefono("+56912345678")
                 .build();

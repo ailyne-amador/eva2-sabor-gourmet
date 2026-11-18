@@ -1,5 +1,6 @@
 package com.saborgourmet.reservas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
  * Entidad de dominio de un cliente persistida en JSON y utilizada por los
  * services y repositories de la arquitectura CSR.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @Builder
 @NoArgsConstructor
@@ -20,10 +22,6 @@ public class Cliente {
 
     /** Nombre completo del cliente. */
     private String nombre;
-
-    /** Identificación oficial del cliente, única entre los registros. */
-    private String identificacion;
-
     /** Correo electrónico de contacto del cliente. */
     private String email;
 

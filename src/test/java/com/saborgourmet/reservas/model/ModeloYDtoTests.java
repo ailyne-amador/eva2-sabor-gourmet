@@ -1,6 +1,7 @@
 package com.saborgourmet.reservas.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.saborgourmet.reservas.dto.ClienteRequest;
@@ -62,12 +63,25 @@ class ModeloYDtoTests {
         assertTrue(json.contains("\"hora\":\"20:00\""));
         assertEquals(original, copia);
     }
+    /** Comprueba que archivos JSON antiguos con el campo retirado sigan cargando. */
+    @Test
+    void ignoraIdentificacionObsoletaEnClientePersistido() throws Exception {
+        String json = """
+                {"id":1,"nombre":"Camila Rojas","identificacion":"12.345.678-5",
+                 "email":"camila@example.com","telefono":"+56912345678"}
+                """;
+
+        Cliente cliente = jsonMapper.readValue(json, Cliente.class);
+
+        assertEquals(Long.valueOf(1L), cliente.getId());
+        assertFalse(jsonMapper.writeValueAsString(cliente).contains("identificacion"));
+    }
 
     /** Verifica que las restricciones rechacen ausencias, textos vacíos y números no positivos. */
     @Test
     void dtoRechazaCamposObligatoriosInvalidos() {
-        assertEquals(Set.of("nombre", "identificacion", "email", "telefono"), camposInvalidos(
-                new ClienteRequest("", "", "correo-invalido", "")));
+        assertEquals(Set.of("nombre", "email", "telefono"), camposInvalidos(
+                new ClienteRequest("", "correo-invalido", "")));
         assertEquals(Set.of("numero", "capacidad"), camposInvalidos(
                 new MesaRequest(null, 0, null)));
         assertEquals(Set.of("clienteId", "mesaId", "fecha", "hora", "cantidadPersonas"), camposInvalidos(
