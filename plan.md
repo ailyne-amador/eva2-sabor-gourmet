@@ -548,12 +548,12 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** exponer la API con `ResponseEntity` y códigos HTTP correctos.
 
-- [ ] `ClienteController` (`@RestController`, `@RequestMapping("/api/clientes")`): GET lista, GET por id, POST (`201` + `Location` vía `ResponseEntity.created(URI)`), PUT, DELETE (`ResponseEntity.noContent().build()` → 204).
-- [ ] `MesaController` (`/api/mesas`): mismo CRUD + `GET /disponibles` con `@RequestParam` (`fecha` y `hora` con `@DateTimeFormat`).
-- [ ] `ReservaController` (`/api/reservas`): GET lista con filtros opcionales, GET por id, POST (201), PUT (200), **`PATCH /{id}/cancelar`** (200).
-- [ ] Todos los métodos devuelven `ResponseEntity<...>`; usan `@Valid @RequestBody`; **solo** llaman al Service.
-- [ ] Javadoc en cada endpoint: método, ruta, códigos posibles.
-- [ ] Tests `@WebMvcTest` por controller (con `@MockitoBean` de los services; si la versión de Boot es < 3.4 usar `@MockBean`):
+- [x] `ClienteController` (`@RestController`, `@RequestMapping("/api/clientes")`): GET lista, GET por id, POST (`201` + `Location` vía `ResponseEntity.created(URI)`), PUT, DELETE (`ResponseEntity.noContent().build()` → 204).
+- [x] `MesaController` (`/api/mesas`): mismo CRUD + `GET /disponibles` con `@RequestParam` (`fecha` y `hora` con `@DateTimeFormat`).
+- [x] `ReservaController` (`/api/reservas`): GET lista con filtros opcionales, GET por id, POST (201), PUT (200), **`PATCH /{id}/cancelar`** (200).
+- [x] Todos los métodos devuelven `ResponseEntity<...>`; usan `@Valid @RequestBody`; **solo** llaman al Service.
+- [x] Javadoc en cada endpoint: método, ruta, códigos posibles.
+- [x] Tests `@WebMvcTest` por controller (con `@MockitoBean` de los services; si la versión de Boot es < 3.4 usar `@MockBean`):
   - códigos 200/201/204 en caso feliz, header `Location` en 201
   - body inválido → 400 con `detalles`
   - service lanza 404/409 → el handler responde 404/409
@@ -668,7 +668,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 4 | Excepciones y manejo global de errores | ✅ Completada |
 | 5 | Services: Clientes y Mesas | ✅ Completada |
 | 6 | Service de Reservas y disponibilidad | ✅ Completada |
-| 7 | Controllers REST | ⬜ Pendiente |
+| 7 | Controllers REST | ✅ Completada |
 | 8 | Pruebas de integración | ⬜ Pendiente |
 | 9 | Postman / HTTP / evidencias | ⬜ Pendiente |
 | 10 | Documentación e informe (borrador) | ⬜ Pendiente |
