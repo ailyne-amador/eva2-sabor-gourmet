@@ -167,6 +167,10 @@ class MesaServiceTest {
                 () -> servicio.disponibles(fecha, LocalTime.of(20, 0), 0));
         assertThrows(SolicitudInvalidaException.class,
                 () -> servicio.disponibles(fecha, LocalTime.of(22, 0), 2));
+        assertThrows(SolicitudInvalidaException.class,
+                () -> servicio.disponibles(null, LocalTime.of(20, 0), 2));
+        assertThrows(SolicitudInvalidaException.class,
+                () -> servicio.disponibles(fecha, null, 2));
     }
 
     private MesaRequest solicitud(int numero, int capacidad) {

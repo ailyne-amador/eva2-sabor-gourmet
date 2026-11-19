@@ -520,12 +520,12 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** el núcleo del sistema.
 
-- [ ] `ReservaService`: inyectar `ReservaRepository`, `ClienteRepository`, `MesaRepository`, `ReservasProperties`, `Clock`.
-- [ ] Método privado `haySolapamiento(mesaId, fecha, hora, duracion, idAExcluir)` aplicando la regla de la sección 3.
-- [ ] `crear(request)`, `modificar(id, request)`, `cancelar(id)` — **`synchronized`** (comentar por qué).
-- [ ] `listar(fecha, estado, clienteId, mesaId)` (filtros opcionales, combinables), `obtener(id)`.
-- [ ] `MesaService.disponibles(fecha, hora, personas)`: validar parámetros (`personas > 0`, horario) y devolver mesas libres con capacidad suficiente.
-- [ ] Tests unitarios (Mockito + `Clock.fixed(...)`):
+- [x] `ReservaService`: inyectar `ReservaRepository`, `ClienteRepository`, `MesaRepository`, `ReservasProperties`, `Clock`.
+- [x] Método privado `haySolapamiento(mesaId, fecha, hora, duracion, idAExcluir)` aplicando la regla de la sección 3.
+- [x] `crear(request)`, `modificar(id, request)`, `cancelar(id)` — **`synchronized`** (comentar por qué).
+- [x] `listar(fecha, estado, clienteId, mesaId)` (filtros opcionales, combinables), `obtener(id)`.
+- [x] `MesaService.disponibles(fecha, hora, personas)`: validar parámetros (`personas > 0`, horario) y devolver mesas libres con capacidad suficiente.
+- [x] Tests unitarios (Mockito + `Clock.fixed(...)`):
   - crear OK
   - cliente inexistente → 404; mesa inexistente → 404
   - fecha/hora pasada → 400; fuera de horario → 400; personas > capacidad → 400; personas ≤ 0 → 400
@@ -537,8 +537,8 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
   - disponibilidad: excluye mesas ocupadas y mesas pequeñas; tras cancelar vuelve a aparecer
 
 **Criterios de aceptación**
-- Todas las reglas de la sección 7 cubiertas por al menos un test.
-- La cancelación demostrablemente libera la mesa (test).
+- [x] Todas las reglas de la sección 7 cubiertas por al menos un test.
+- [x] La cancelación demostrablemente libera la mesa (test).
 
 **Commit:** `feat(fase6): servicio de reservas, disponibilidad y cancelación`
 
@@ -667,7 +667,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 3 | Persistencia JSON + Repositories | ✅ Completada |
 | 4 | Excepciones y manejo global de errores | ✅ Completada |
 | 5 | Services: Clientes y Mesas | ✅ Completada |
-| 6 | Service de Reservas y disponibilidad | ⬜ Pendiente |
+| 6 | Service de Reservas y disponibilidad | ✅ Completada |
 | 7 | Controllers REST | ⬜ Pendiente |
 | 8 | Pruebas de integración | ⬜ Pendiente |
 | 9 | Postman / HTTP / evidencias | ⬜ Pendiente |
