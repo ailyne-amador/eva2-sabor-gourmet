@@ -1,0 +1,300 @@
+# Ejecutar en orden con REST Client y la aplicación en http://localhost:8080.
+# Los IDs 1–3 del ejemplo se conservan; las solicitudes creadas capturan sus IDs.
+@baseUrl = http://localhost:8080
+@clienteExistenteId = 1
+@mesaExistenteId = 1
+@mesaReservadaId = 2
+@reservaExistenteId = 1
+@fechaDisponibilidad = 2026-12-07
+@fechaReservaModificada = 2026-12-08
+
+### 01 Clientes — listar (200)
+GET {{baseUrl}}/api/clientes
+Accept: application/json
+
+### 01 Clientes — consultar cliente existente (200)
+GET {{baseUrl}}/api/clientes/{{clienteExistenteId}}
+Accept: application/json
+
+### 01 Clientes — crear (201)
+# @name crearCliente
+POST {{baseUrl}}/api/clientes
+Content-Type: application/json
+
+{
+  "nombre": "Paula Postman",
+  "email": "paula.postman@example.com",
+  "telefono": "+56911112222"
+}
+
+### 01 Clientes — modificar creado (200)
+PUT {{baseUrl}}/api/clientes/{{crearCliente.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "nombre": "Paula Postman Actualizada",
+  "email": "paula.actualizada@example.com",
+  "telefono": "+56911112222"
+}
+
+### 01 Clientes — eliminar creado (204)
+DELETE {{baseUrl}}/api/clientes/{{crearCliente.response.body.$.id}}
+
+### 01 Clientes — consultar eliminado (404)
+GET {{baseUrl}}/api/clientes/{{crearCliente.response.body.$.id}}
+Accept: application/json
+
+### 02 Mesas — listar (200)
+GET {{baseUrl}}/api/mesas
+Accept: application/json
+
+### 02 Mesas — consultar mesa existente (200)
+GET {{baseUrl}}/api/mesas/{{mesaExistenteId}}
+Accept: application/json
+
+### 02 Mesas — crear (201)
+# @name crearMesa
+POST {{baseUrl}}/api/mesas
+Content-Type: application/json
+
+{
+  "numero": 4,
+  "capacidad": 2,
+  "ubicacion": "Postman"
+}
+
+### 02 Mesas — modificar creada (200)
+PUT {{baseUrl}}/api/mesas/{{crearMesa.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "numero": 4,
+  "capacidad": 3,
+  "ubicacion": "Salón de pruebas"
+}
+
+### 02 Mesas — eliminar creada (204)
+DELETE {{baseUrl}}/api/mesas/{{crearMesa.response.body.$.id}}
+
+### 03 Disponibilidad — turno de prueba libre antes de reservar (200)
+GET {{baseUrl}}/api/mesas/disponibles?fecha={{fechaDisponibilidad}}&hora=19:00&personas=2
+Accept: application/json
+
+### 03 Disponibilidad — mesa 2 ocupada por la reserva de ejemplo (200)
+GET {{baseUrl}}/api/mesas/disponibles?fecha=2026-12-05&hora=20:00&personas=4
+Accept: application/json
+
+### 04 Reservas — listar todas (200)
+GET {{baseUrl}}/api/reservas
+Accept: application/json
+
+### 04 Reservas — filtrar por fecha, estado, cliente y mesa (200)
+GET {{baseUrl}}/api/reservas?fecha=2026-12-05&estado=ACTIVA&clienteId=1&mesaId=2
+Accept: application/json
+
+### 04 Reservas — consultar reserva de ejemplo (200)
+GET {{baseUrl}}/api/reservas/{{reservaExistenteId}}
+Accept: application/json
+
+### 04 Reservas — crear reserva de prueba (201)
+# @name crearReserva
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-12-07",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}
+
+### 04 Reservas — disponibilidad después de reservar (200; mesa 1 no aparece)
+GET {{baseUrl}}/api/mesas/disponibles?fecha={{fechaDisponibilidad}}&hora=19:00&personas=2
+Accept: application/json
+
+### 04 Reservas — modificar reserva creada (200)
+PUT {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "{{fechaReservaModificada}}",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}
+
+### 04 Reservas — consultar reserva modificada (200)
+GET {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}
+Accept: application/json
+
+### 05 Cancelación — disponibilidad antes de cancelar (200; mesa 1 no aparece)
+GET {{baseUrl}}/api/mesas/disponibles?fecha={{fechaReservaModificada}}&hora=19:00&personas=2
+Accept: application/json
+
+### 05 Cancelación — cancelar reserva (200; estado CANCELADA)
+PATCH {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}/cancelar
+
+### 05 Cancelación — disponibilidad después de cancelar (200; mesa 1 aparece)
+GET {{baseUrl}}/api/mesas/disponibles?fecha={{fechaReservaModificada}}&hora=19:00&personas=2
+Accept: application/json
+
+### 05 Cancelación — consultar reserva cancelada (200)
+GET {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}
+Accept: application/json
+
+### 06 Errores — validación de cliente (400)
+POST {{baseUrl}}/api/clientes
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "email": "correo-invalido",
+  "telefono": ""
+}
+
+### 06 Errores — validación de mesa (400)
+POST {{baseUrl}}/api/mesas
+Content-Type: application/json
+
+{
+  "numero": 0,
+  "capacidad": 0,
+  "ubicacion": "Inválida"
+}
+
+### 06 Errores — validación de reserva (400)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-12-09",
+  "hora": "19:00",
+  "cantidadPersonas": 0
+}
+
+### 06 Errores — falta parámetro personas (400)
+GET {{baseUrl}}/api/mesas/disponibles?fecha=2026-12-07&hora=19:00
+Accept: application/json
+
+### 06 Errores — formato de fecha de consulta inválido (400)
+GET {{baseUrl}}/api/mesas/disponibles?fecha=no-es-fecha&hora=19:00&personas=2
+Accept: application/json
+
+### 06 Errores — reserva en fecha pasada (400)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-11-19",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}
+
+### 06 Errores — fuera del horario de atención (400)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-12-09",
+  "hora": "22:00",
+  "cantidadPersonas": 2
+}
+
+### 06 Errores — capacidad excedida (400)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-12-09",
+  "hora": "19:00",
+  "cantidadPersonas": 3
+}
+
+### 06 Errores — cliente inexistente en la ruta (404)
+GET {{baseUrl}}/api/clientes/999999
+Accept: application/json
+
+### 06 Errores — mesa inexistente en la ruta (404)
+GET {{baseUrl}}/api/mesas/999999
+Accept: application/json
+
+### 06 Errores — reserva inexistente en la ruta (404)
+GET {{baseUrl}}/api/reservas/999999
+Accept: application/json
+
+### 06 Errores — cliente referenciado inexistente (404)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 999999,
+  "mesaId": 1,
+  "fecha": "2026-12-09",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}
+
+### 06 Errores — mesa referenciada inexistente (404)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 999999,
+  "fecha": "2026-12-09",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}
+
+### 06 Errores — número de mesa duplicado (409)
+POST {{baseUrl}}/api/mesas
+Content-Type: application/json
+
+{
+  "numero": 2,
+  "capacidad": 4,
+  "ubicacion": "Duplicada"
+}
+
+### 06 Errores — reserva superpuesta (409)
+POST {{baseUrl}}/api/reservas
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 2,
+  "fecha": "2026-12-05",
+  "hora": "21:00",
+  "cantidadPersonas": 2
+}
+
+### 06 Errores — eliminar cliente con reservas asociadas (409)
+DELETE {{baseUrl}}/api/clientes/1
+
+### 06 Errores — eliminar mesa con reservas asociadas (409)
+DELETE {{baseUrl}}/api/mesas/{{mesaReservadaId}}
+
+### 06 Errores — cancelar reserva ya cancelada (409)
+PATCH {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}/cancelar
+
+### 06 Errores — modificar reserva cancelada (409)
+PUT {{baseUrl}}/api/reservas/{{crearReserva.response.body.$.id}}
+Content-Type: application/json
+
+{
+  "clienteId": 1,
+  "mesaId": 1,
+  "fecha": "2026-12-09",
+  "hora": "19:00",
+  "cantidadPersonas": 2
+}

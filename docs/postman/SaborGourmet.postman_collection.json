@@ -1,0 +1,258 @@
+{
+  "info": {
+    "name": "Sabor Gourmet — Reservas",
+    "description": "Recorrido HTTP ordenado. Inicia la aplicación con data/datos.json de ejemplo y ejecuta la colección completa para que las variables de IDs se capturen al crear recursos.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "clienteIdBase", "value": "1" },
+    { "key": "mesaIdBase", "value": "1" },
+    { "key": "mesaIdReservada", "value": "2" },
+    { "key": "reservaIdBase", "value": "1" },
+    { "key": "fechaDisponibilidad", "value": "2026-12-07" },
+    { "key": "fechaReservaModificada", "value": "2026-12-08" }
+  ],
+  "item": [
+    {
+      "name": "01 Clientes",
+      "item": [
+        {
+          "name": "Listar clientes",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/clientes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Consultar cliente existente",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/clientes/{{clienteIdBase}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Crear cliente",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Paula Postman\",\n  \"email\": \"paula.postman@example.com\",\n  \"telefono\": \"+56911112222\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/clientes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 201 y Location', function () {", "    pm.response.to.have.status(201);", "    pm.expect(pm.response.headers.get('Location')).to.include('/api/clientes/');", "});", "pm.collectionVariables.set('clientePruebaId', pm.response.json().id.toString());"] } }]
+        },
+        {
+          "name": "Modificar cliente creado",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"Paula Postman Actualizada\",\n  \"email\": \"paula.actualizada@example.com\",\n  \"telefono\": \"+56911112222\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/clientes/{{clientePruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Eliminar cliente creado",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/clientes/{{clientePruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "02 Mesas",
+      "item": [
+        {
+          "name": "Listar mesas",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Consultar mesa existente",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/{{mesaIdBase}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Crear mesa",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"numero\": 4,\n  \"capacidad\": 2,\n  \"ubicacion\": \"Postman\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/mesas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 201 y Location', function () {", "    pm.response.to.have.status(201);", "    pm.expect(pm.response.headers.get('Location')).to.include('/api/mesas/');", "});", "pm.collectionVariables.set('mesaPruebaId', pm.response.json().id.toString());"] } }]
+        },
+        {
+          "name": "Modificar mesa creada",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"numero\": 4,\n  \"capacidad\": 3,\n  \"ubicacion\": \"Salón de pruebas\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/mesas/{{mesaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Eliminar mesa creada",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/mesas/{{mesaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 204', function () { pm.response.to.have.status(204); });"] } }]
+        }
+      ]
+    },
+    {
+      "name": "03 Disponibilidad",
+      "item": [
+        {
+          "name": "Turno libre antes de reservar",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/disponibles?fecha={{fechaDisponibilidad}}&hora=19:00&personas=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y mesa 1 disponible', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().some(function (mesa) { return mesa.id === 1; })).to.eql(true);", "});"] } }]
+        },
+        {
+          "name": "Reserva de ejemplo bloquea mesa 2",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/disponibles?fecha=2026-12-05&hora=20:00&personas=4" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y mesa 2 no disponible', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().some(function (mesa) { return mesa.id === 2; })).to.eql(false);", "});"] } }]
+        }
+      ]
+    },
+    {
+      "name": "04 Reservas",
+      "item": [
+        {
+          "name": "Listar reservas",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Filtrar reservas por fecha, estado, cliente y mesa",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/reservas?fecha=2026-12-05&estado=ACTIVA&clienteId=1&mesaId=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Consultar reserva existente",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/reservas/{{reservaIdBase}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200', function () { pm.response.to.have.status(200); });"] } }]
+        },
+        {
+          "name": "Crear reserva de prueba",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"{{fechaDisponibilidad}}\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 201 y Location', function () {", "    pm.response.to.have.status(201);", "    pm.expect(pm.response.headers.get('Location')).to.include('/api/reservas/');", "});", "pm.collectionVariables.set('reservaPruebaId', pm.response.json().id.toString());"] } }]
+        },
+        {
+          "name": "Disponibilidad después de reservar",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/disponibles?fecha={{fechaDisponibilidad}}&hora=19:00&personas=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y mesa 1 ocupada', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().some(function (mesa) { return mesa.id === 1; })).to.eql(false);", "});"] } }]
+        },
+        {
+          "name": "Modificar reserva de prueba",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"{{fechaReservaModificada}}\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y fecha modificada', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().fecha).to.eql(pm.collectionVariables.get('fechaReservaModificada'));", "});"] } }]
+        },
+        {
+          "name": "Consultar reserva modificada",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y fecha modificada', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().fecha).to.eql(pm.collectionVariables.get('fechaReservaModificada'));", "});"] } }]
+        }
+      ]
+    },
+    {
+      "name": "05 Cancelación",
+      "item": [
+        {
+          "name": "Disponibilidad antes de cancelar",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/disponibles?fecha={{fechaReservaModificada}}&hora=19:00&personas=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y mesa 1 ocupada', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().some(function (mesa) { return mesa.id === 1; })).to.eql(false);", "});"] } }]
+        },
+        {
+          "name": "Cancelar reserva",
+          "request": { "method": "PATCH", "header": [], "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}/cancelar" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y estado CANCELADA', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().estado).to.eql('CANCELADA');", "});"] } }]
+        },
+        {
+          "name": "Disponibilidad después de cancelar",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/mesas/disponibles?fecha={{fechaReservaModificada}}&hora=19:00&personas=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y mesa 1 disponible', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().some(function (mesa) { return mesa.id === 1; })).to.eql(true);", "});"] } }]
+        },
+        {
+          "name": "Consultar reserva cancelada",
+          "request": { "method": "GET", "header": [{ "key": "Accept", "value": "application/json" }], "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 200 y estado CANCELADA', function () {", "    pm.response.to.have.status(200);", "    pm.expect(pm.response.json().estado).to.eql('CANCELADA');", "});"] } }]
+        }
+      ]
+    },
+    {
+      "name": "06 Errores",
+      "item": [
+        {
+          "name": "Cliente con campos inválidos (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"nombre\": \"\",\n  \"email\": \"correo-invalido\",\n  \"telefono\": \"\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/clientes" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 con detalles y sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.json().detalles).to.be.an('array');", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Mesa con capacidad inválida (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"numero\": 0,\n  \"capacidad\": 0\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/mesas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Reserva con cantidad inválida (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 0\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Falta parámetro personas (400)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/mesas/disponibles?fecha=2026-12-07&hora=19:00" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Fecha de consulta inválida (400)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/mesas/disponibles?fecha=no-es-fecha&hora=19:00&personas=2" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Fecha de reserva pasada (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-11-19\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Reserva fuera del horario (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"22:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Capacidad de mesa excedida (400)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 3\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 400 sin trazas', function () {", "    pm.response.to.have.status(400);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Cliente inexistente (404)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/clientes/999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 404 sin trazas', function () {", "    pm.response.to.have.status(404);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Mesa inexistente (404)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/mesas/999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 404 sin trazas', function () {", "    pm.response.to.have.status(404);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Reserva inexistente (404)",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/reservas/999999" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 404 sin trazas', function () {", "    pm.response.to.have.status(404);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Cliente referido inexistente (404)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 999999,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 404 sin trazas', function () {", "    pm.response.to.have.status(404);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Mesa referida inexistente (404)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 999999,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 404 sin trazas', function () {", "    pm.response.to.have.status(404);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Número de mesa duplicado (409)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"numero\": 2,\n  \"capacidad\": 4,\n  \"ubicacion\": \"Duplicada\"\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/mesas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Reserva superpuesta (409)",
+          "request": { "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 2,\n  \"fecha\": \"2026-12-05\",\n  \"hora\": \"21:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Eliminar cliente con reservas asociadas (409)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/clientes/{{clienteIdBase}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Eliminar mesa con reservas asociadas (409)",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/mesas/{{mesaIdReservada}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Cancelar reserva ya cancelada (409)",
+          "request": { "method": "PATCH", "header": [], "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}/cancelar" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        },
+        {
+          "name": "Modificar reserva cancelada (409)",
+          "request": { "method": "PUT", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\n  \"clienteId\": 1,\n  \"mesaId\": 1,\n  \"fecha\": \"2026-12-09\",\n  \"hora\": \"19:00\",\n  \"cantidadPersonas\": 2\n}", "options": { "raw": { "language": "json" } } }, "url": "{{baseUrl}}/api/reservas/{{reservaPruebaId}}" },
+          "event": [{ "listen": "test", "script": { "type": "text/javascript", "exec": ["pm.test('HTTP 409 sin trazas', function () {", "    pm.response.to.have.status(409);", "    pm.expect(pm.response.text()).not.to.include('Exception');", "    pm.expect(pm.response.text()).not.to.include('at com.');", "});"] } }]
+        }
+      ]
+    }
+  ]
+}

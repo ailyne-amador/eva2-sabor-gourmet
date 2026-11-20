@@ -592,16 +592,16 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** evidencia reproducible para la evaluación.
 
-- [ ] Dejar `data/datos.json` con datos de ejemplo (3+ mesas de distintas capacidades, 2+ clientes, 1–2 reservas con fechas futuras a 2026-11-18).
-- [ ] `docs/requests.http` (formato IntelliJ/VS Code REST Client) con **todos** los endpoints y los casos de error, usando `@baseUrl = http://localhost:8080`.
-- [ ] `docs/postman/SaborGourmet.postman_collection.json` (v2.1) con variable `{{baseUrl}}` y carpetas: `01 Clientes`, `02 Mesas`, `03 Disponibilidad`, `04 Reservas`, `05 Cancelación`, `06 Errores`. Cada request con su body de ejemplo y **tests de Postman** que verifiquen el código de estado esperado.
-- [ ] Ejecutar la app (`mvn spring-boot:run`) y recorrer la colección. Registrar en `docs/evidencias.md`, para cada prueba: **método, URL, cuerpo, estado HTTP y respuesta**. Cubrir:
+- [x] Dejar `data/datos.json` con datos de ejemplo (3+ mesas de distintas capacidades, 2+ clientes, 1–2 reservas con fechas futuras a 2026-11-18).
+- [x] `docs/requests.http` (formato IntelliJ/VS Code REST Client) con **todos** los endpoints y los casos de error, usando `@baseUrl = http://localhost:8080`.
+- [x] `docs/postman/SaborGourmet.postman_collection.json` (v2.1) con variable `{{baseUrl}}` y carpetas: `01 Clientes`, `02 Mesas`, `03 Disponibilidad`, `04 Reservas`, `05 Cancelación`, `06 Errores`. Cada request con su body de ejemplo y **tests de Postman** que verifiquen el código de estado esperado.
+- [x] Ejecutar la app (`mvn spring-boot:run`) y recorrer la colección. Registrar en `docs/evidencias.md`, para cada prueba: **método, URL, cuerpo, estado HTTP y respuesta**. Cubrir:
   - CRUD de clientes y mesas
   - crear / listar / consultar / modificar / cancelar reserva
   - disponibilidad antes y después de reservar y de cancelar
   - **reinicio**: detener la app, volver a arrancar, `GET /api/reservas` → datos intactos
   - errores 400, 404 y 409
-- [ ] Copia del `datos.json` resultante como anexo (`docs/evidencias/datos_despues_de_pruebas.json`).
+- [x] Copia del `datos.json` resultante como anexo (`docs/evidencias/datos_despues_de_pruebas.json`).
 
 > Nota: el agente no puede tomar capturas de pantalla de Postman; el grupo las agrega al informe. En `evidencias.md`, dejar marcadores `[CAPTURA POSTMAN: descripción]` donde corresponda.
 
@@ -670,7 +670,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 6 | Service de Reservas y disponibilidad | ✅ Completada |
 | 7 | Controllers REST | ✅ Completada |
 | 8 | Pruebas de integración | ✅ Completada |
-| 9 | Postman / HTTP / evidencias | ⬜ Pendiente |
+| 9 | Postman / HTTP / evidencias | ✅ Completada |
 | 10 | Documentación e informe (borrador) | ⬜ Pendiente |
 | 11 | Revisión final y empaquetado | ⬜ Pendiente |
 
