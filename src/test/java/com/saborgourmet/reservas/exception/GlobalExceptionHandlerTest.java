@@ -128,6 +128,12 @@ class GlobalExceptionHandlerTest {
          * Genera una excepción de negocio para probar su conversión a respuesta HTTP.
          *
          * @param tipo categoría de excepción que debe provocar el endpoint
+         * @throws RecursoNoEncontradoException si tipo es `no-encontrado`
+         * @throws SolicitudInvalidaException si tipo es `solicitud-invalida`
+         * @throws ConflictoException si tipo es `conflicto`
+         * @throws PersistenciaException si tipo es `persistencia`
+         * @throws IllegalStateException si tipo es `inesperado`
+         * @throws IllegalArgumentException si tipo no coincide con los casos admitidos
          */
         @GetMapping("/prueba/error/{tipo}")
         public void provocarError(@PathVariable String tipo) {

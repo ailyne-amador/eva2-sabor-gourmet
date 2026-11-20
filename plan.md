@@ -616,9 +616,9 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** README completo, comentarios revisados y material para el informe.
 
-- [ ] Revisar que **toda** clase y método público tengan Javadoc/comentarios detallados (requisito explícito de la entrega).
-- [ ] Completar `README.md`: requisitos (JDK 21, Maven), cómo compilar, ejecutar y correr tests, ruta y estructura del `datos.json`, tabla de endpoints, cómo importar la colección Postman, decisiones de diseño y limitaciones conocidas (instancia única, reutilización de IDs al borrar el último).
-- [ ] Crear `docs/informe/borrador_informe.md` con esta estructura (el grupo lo traslada a Word/PDF):
+- [x] Revisar que **toda** clase y método público tengan Javadoc/comentarios detallados (requisito explícito de la entrega).
+- [x] Completar `README.md`: requisitos (JDK 21, Maven), cómo compilar, ejecutar y correr tests, ruta y estructura del `datos.json`, tabla de endpoints, cómo importar la colección Postman, decisiones de diseño y limitaciones conocidas (instancia única, reutilización de IDs al borrar el último).
+- [x] Crear `docs/informe/borrador_informe.md` con esta estructura (el grupo lo traslada a Word/PDF):
   1. **Portada** — marcadores: título, asignatura (Desarrollo de Software Web II), logo IPSS, profesor, integrantes. *No inventar nombres.*
   2. **Índice**
   3. **Introducción** — contexto del restaurante y objetivo.
@@ -632,7 +632,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
      - 4.7 Pruebas y evidencias (CRUD, cancelación, disponibilidad, reinicio, errores)
   5. **Conclusión**
   6. **Bibliografía** (documentación de Spring Boot, Jackson, RFC 9110 sobre semántica HTTP, etc., en el formato que pida el curso)
-- [ ] Anexar al borrador el listado de archivos del proyecto con una línea de descripción cada uno.
+- [x] Anexar al borrador el listado de archivos del proyecto con una línea de descripción cada uno.
 
 **Formato final del informe (lo aplica el grupo en Word/PDF):** Arial 12, interlineado 1,15, texto justificado, páginas numeradas, portada con logo IPSS, nombre `EVU2_GRUPO_APELLIDO_NOMBRE`.
 
@@ -671,7 +671,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 7 | Controllers REST | ✅ Completada |
 | 8 | Pruebas de integración | ✅ Completada |
 | 9 | Postman / HTTP / evidencias | ✅ Completada |
-| 10 | Documentación e informe (borrador) | ⬜ Pendiente |
+| 10 | Documentación e informe (borrador) | ✅ Completada |
 | 11 | Revisión final y empaquetado | ⬜ Pendiente |
 
 Leyenda: ⬜ Pendiente · 🟨 En curso · ✅ Completada
