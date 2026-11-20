@@ -572,13 +572,13 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 
 **Objetivo:** verificar la API completa y la persistencia real.
 
-- [ ] `FlujoCompletoIT` con `@SpringBootTest` + `@AutoConfigureMockMvc`; usar `@TempDir` y `@DynamicPropertySource` para apuntar `app.datos.ruta` a un archivo temporal (los tests **no** deben tocar `data/datos.json`).
-- [ ] Escenario 1 — **CRUD completo** de clientes y mesas (crear, listar, obtener, actualizar, eliminar, 404 posterior).
-- [ ] Escenario 2 — **Reserva completa**: crear → listar → obtener → modificar → cancelar.
-- [ ] Escenario 3 — **Disponibilidad**: mesa aparece libre → se reserva → deja de aparecer → se cancela → vuelve a aparecer.
-- [ ] Escenario 4 — **Persistencia tras reinicio**: crear datos, construir un **nuevo** contexto/`JsonFileStore` sobre el mismo archivo y comprobar que los datos siguen ahí (incluida la reserva cancelada con su estado).
-- [ ] Escenario 5 — **Errores**: 400 (body inválido, fecha pasada, capacidad), 404 (ids inexistentes, cliente/mesa inexistente en reserva), 409 (solapamiento, duplicados, eliminar con reservas, cancelar dos veces). Verificar que ningún cuerpo de error contiene trazas.
-- [ ] Verificar que el contenido de `datos.json` en disco refleja cada cambio (incluida la cancelación).
+- [x] `FlujoCompletoIT` con `@SpringBootTest` + `@AutoConfigureMockMvc`; usar `@TempDir` y `@DynamicPropertySource` para apuntar `app.datos.ruta` a un archivo temporal (los tests **no** deben tocar `data/datos.json`).
+- [x] Escenario 1 — **CRUD completo** de clientes y mesas (crear, listar, obtener, actualizar, eliminar, 404 posterior).
+- [x] Escenario 2 — **Reserva completa**: crear → listar → obtener → modificar → cancelar.
+- [x] Escenario 3 — **Disponibilidad**: mesa aparece libre → se reserva → deja de aparecer → se cancela → vuelve a aparecer.
+- [x] Escenario 4 — **Persistencia tras reinicio**: crear datos, construir un **nuevo** contexto/`JsonFileStore` sobre el mismo archivo y comprobar que los datos siguen ahí (incluida la reserva cancelada con su estado).
+- [x] Escenario 5 — **Errores**: 400 (body inválido, fecha pasada, capacidad), 404 (ids inexistentes, cliente/mesa inexistente en reserva), 409 (solapamiento, duplicados, eliminar con reservas, cancelar dos veces). Verificar que ningún cuerpo de error contiene trazas.
+- [x] Verificar que el contenido de `datos.json` en disco refleja cada cambio (incluida la cancelación).
 
 **Criterios de aceptación**
 - `mvn clean verify` → verde.
@@ -669,7 +669,7 @@ Respuesta `201 Created` (`Location: /api/reservas/2`):
 | 5 | Services: Clientes y Mesas | ✅ Completada |
 | 6 | Service de Reservas y disponibilidad | ✅ Completada |
 | 7 | Controllers REST | ✅ Completada |
-| 8 | Pruebas de integración | ⬜ Pendiente |
+| 8 | Pruebas de integración | ✅ Completada |
 | 9 | Postman / HTTP / evidencias | ⬜ Pendiente |
 | 10 | Documentación e informe (borrador) | ⬜ Pendiente |
 | 11 | Revisión final y empaquetado | ⬜ Pendiente |
