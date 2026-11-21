@@ -19,10 +19,10 @@ public class Mesa {
     private Long id;
 
     /** Número visible de la mesa, único entre las mesas registradas. */
-    private Integer numero;
+    private int numero;
 
     /** Cantidad máxima de personas que puede recibir la mesa. */
-    private Integer capacidad;
+    private int capacidad;
 
     /** Ubicación descriptiva de la mesa; puede ser nula. */
     private String ubicacion;

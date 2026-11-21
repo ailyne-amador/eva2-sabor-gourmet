@@ -14,7 +14,6 @@ public class ClienteRepository {
 
     /**
      * Construye el repository con el almacenamiento JSON compartido.
-     *
      * @param almacenamiento componente encargado de leer y guardar el archivo
      */
     public ClienteRepository(JsonFileStore almacenamiento) {

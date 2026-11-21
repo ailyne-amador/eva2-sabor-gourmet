@@ -67,14 +67,11 @@ Una reserva debe estar en el futuro, dentro del horario de atención y no supera
 
 - **Postman:** importa `docs/postman/SaborGourmet.postman_collection.json`. La colección define `baseUrl` como `http://localhost:8080` y agrupa clientes, mesas, disponibilidad, reservas, cancelación y errores.
 - **REST Client:** abre `docs/requests.http` en VS Code con la extensión REST Client o IntelliJ IDEA y ejecuta las solicitudes en orden.
-- **Evidencias:** `docs/evidencias.md` registra los cuerpos y respuestas observadas; `data/datos.json` contiene datos de ejemplo.
 
 ## Decisiones y limitaciones
 
 - Persistencia en un solo archivo JSON; no se utiliza una base de datos.
-- La aplicación está diseñada para una sola instancia. El bloqueo de lectura/escritura y `synchronized` coordinan operaciones dentro de esa instancia, no entre procesos o réplicas.
 - Los IDs se calculan como `max(id) + 1` por colección; al eliminar el registro con el ID más alto, ese ID puede reutilizarse.
 - Las reservas duran 120 minutos por defecto; cada reserva guarda su duración para conservar el historial aunque cambie la configuración.
 - La cancelación no elimina reservas: cambia su estado y mantiene las relaciones históricas.
 
-Las decisiones adicionales están registradas en [`docs/DECISIONES.md`](docs/DECISIONES.md).
